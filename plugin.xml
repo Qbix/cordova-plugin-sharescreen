@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-sharescreen"
+    version="1.0.0">
+    <name>cordova-plugin-sharescreen</name>
+    <description>
+        Qbix cordova plugin for share screen.
+    </description>
+
+    <js-module name="CordovaPluginSharescreen" src="www/sharescreen.js">
+        <clobbers target="cordova.plugins.sharescreen" />
+    </js-module>
+
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="CordovaPluginSharescreen">
+                <param name="android-package"
+                    value="com.qbix.CordovaPluginSharescreen" />
+            </feature>
+        </config-file>
+
+
+        <source-file src="src/android/CordovaPluginSharescreen.java"
+            target-dir="src/com/qbix" />
+    </platform>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="CordovaPluginSharescreen">
+                <param name="ios-package" value="CordovaPluginSharescreen" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CordovaPluginSharescreen.h" />
+        <source-file src="src/ios/CordovaPluginSharescreen.m" />
+    </platform>
+</plugin>

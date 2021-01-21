@@ -1,0 +1,21 @@
+{
+    "name": "cordova-plugin-sharescreen",
+    "version": "1.0.0",
+    "description": "Qbix cordova plugin for share screen",
+    "cordova": {
+        "id": "cordova-plugin-sharescreen",
+        "platforms": [
+            "android",
+            "ios"
+        ]
+    },
+    "keywords": [
+        "cordova",
+        "q",
+        "qbix",
+        "share",
+        "screen"
+    ],
+    "author": "Qbix, Inc.",
+    "license": "Apache-2.0"
+}
