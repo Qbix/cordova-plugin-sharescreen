@@ -9,6 +9,8 @@
         Qbix cordova plugin for share screen.
     </description>
 
+    <dependency id="cordova-plugin-iosrtc" url="https://github.com/cordova-rtc/cordova-plugin-iosrtc.git"/>
+    
     <js-module name="CordovaPluginSharescreen" src="www/sharescreen.js">
         <clobbers target="cordova.plugins.sharescreen" />
     </js-module>
@@ -17,13 +19,20 @@
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="CordovaPluginSharescreen">
                 <param name="android-package"
-                    value="com.qbix.CordovaPluginSharescreen" />
+                    value="com.qbix.sharescreen.CordovaPluginSharescreen" />
             </feature>
+            <preference name="android-minSdkVersion" value="21" />
         </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        </config-file>
 
-        <source-file src="src/android/CordovaPluginSharescreen.java"
-            target-dir="src/com/qbix" />
+        <source-file src="src/android/CordovaPluginSharescreen.java" target-dir="src/com/qbix/sharescreen" />
+        <source-file src="src/android/WebRtcClient.java" target-dir="src/com/qbix/sharescreen" />
+
+        <framework src="org.webrtc:google-webrtc:1.0.27771" />
+        <framework src="com.google.code.gson:gson:2.8.6" />
     </platform>
 
     <platform name="ios">
@@ -33,7 +42,38 @@
             </feature>
         </config-file>
 
+        <config-file parent="com.apple.security.application-groups" target="*-Debug.plist">
+          <array>
+            <string>group.__APP_IDENTIFIER__</string>
+          </array>
+        </config-file>
+        <config-file parent="com.apple.security.application-groups" target="*-Release.plist">
+          <array>
+            <string>group.__APP_IDENTIFIER__</string>
+          </array>
+        </config-file>
+
+        <source-file src="src/ios/ShareExtension/IceCandidate.swift"/>
+        <source-file src="src/ios/ShareExtension/Message.swift"/>
+        <source-file src="src/ios/ShareExtension/SessionDescription.swift"/>
+        <source-file src="src/ios/ShareExtension/SignalingClient.swift"/>
+        <source-file src="src/ios/ShareExtension/WebRTCClient.swift"/>
+
+        <resource-file src="src/ios/VideoViewController.xib" />
+        <source-file src="src/ios/VideoViewController.swift"/>
+
         <header-file src="src/ios/CordovaPluginSharescreen.h" />
         <source-file src="src/ios/CordovaPluginSharescreen.m" />
+
+        <hook type="before_plugin_install" src="hooks/npmInstall.js" />
+        <hook type="before_plugin_install" src="hooks/iosCopyShareExtension.js" />
+        <hook type="after_plugin_install" src="hooks/iosAddTarget.js" />
+        <hook type="after_plugin_install" src="hooks/fixAppEntitlements.js"/>
+        <hook type="after_plugin_install" src="hooks/setConstants.js"/>
+        <hook type="after_plugin_install" src="../cordova-plugin-iosrtc/extra/hooks/iosrtc-swift-support.js"/>
+        <hook type="before_plugin_uninstall" src="hooks/iosRemoveTarget.js" />
+
+        <framework src="GoogleWebRTC" type="podspec" spec="~> 1.1"/>
+    
     </platform>
 </plugin>
