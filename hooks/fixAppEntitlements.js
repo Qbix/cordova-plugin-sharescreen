@@ -7,33 +7,6 @@ var plist = require('plist');
 var Q = require('q');
 var xcode = require('xcode');
 
-function log(logString, type) {
-  var prefix;
-  var postfix = '';
-  switch (type) {
-    case 'error':
-      prefix = '\x1b[1m' + '\x1b[31m' + '💥 😨 '; // bold, red
-      throw new Error(prefix + logString + 'x1b[0m'); // reset
-    case 'info':
-      prefix =
-        '\x1b[40m' +
-        '\x1b[37m' +
-        '\x1b[2m' +
-        '☝️ [INFO] ' +
-        '\x1b[0m\x1b[40m' +
-        '\x1b[33m'; // fgWhite, dim, reset, bgBlack, fgYellow
-      break;
-    case 'start':
-      prefix = '\x1b[40m' + '\x1b[36m'; // bgBlack, fgCyan
-      break;
-    case 'success':
-      prefix = '\x1b[40m' + '\x1b[32m' + '✔ '; // bgBlack, fgGreen
-      postfix = ' 🦄  🎉  🤘';
-      break;
-  }
-
-  console.log(prefix + logString + postfix);
-}
 
 function removeDuplicateSubsequentLines(string) {
   var lineArray = string.split('\n');
@@ -44,17 +17,18 @@ function removeDuplicateSubsequentLines(string) {
 
 function replacePlaceholdersInPlist(plistPath, placeHolderValues) {
     var plistContents = fs.readFileSync(plistPath, 'utf8');
+    console.log("Before content: "+plistContents)
     for (var i = 0; i < placeHolderValues.length; i++) {
         var placeHolderValue = placeHolderValues[i],
             regexp = new RegExp(placeHolderValue.placeHolder, "g");
         plistContents = plistContents.replace(regexp, placeHolderValue.value);
         plistContents = removeDuplicateSubsequentLines(plistContents);
     }
+    console.log("After content: "+plistContents)
     fs.writeFileSync(plistPath, plistContents);
 }
 
-console.log('\x1b[40m');
-log(
+console.log(
   'Running fixAppEntitlements hook, fixing the app entitlements 🦄 ',
   'start'
 );
@@ -63,7 +37,7 @@ module.exports = function (context) {
   var deferral = new Q.defer();
 
   if (context.opts.cordova.platforms.indexOf('ios') < 0) {
-    log('You have to add the ios platform before adding this plugin!', 'error');
+    console.log('You have to add the ios platform before adding this plugin!', 'error');
   }
 
   var contents = fs.readFileSync(
@@ -99,15 +73,12 @@ module.exports = function (context) {
         var entitlementsPath = path.join(iosFolder, projectName, 'Entitlements-' + config + '.plist');
         replacePlaceholdersInPlist(entitlementsPath, placeHolderValues);
       });
-      log('Successfully added app group information to the app entitlement files!', 'success');
-
-      console.log('\x1b[0m'); // reset
-
+      console.log('Successfully added app group information to the app entitlement files!', 'success');
       deferral.resolve();
     };
 
     if (err) {
-      log(err, 'error');
+      console.log(err, 'error');
     }
 
     // Find the project folder by looking for *.xcodeproj
@@ -121,7 +92,7 @@ module.exports = function (context) {
     }
 
     if (!projectFolder || !projectName) {
-      log('Could not find an *.xcodeproj folder in: ' + iosFolder, 'error');
+      console.log('Could not find an *.xcodeproj folder in: ' + iosFolder, 'error');
     }
 
     run();

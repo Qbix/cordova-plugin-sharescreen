@@ -16,11 +16,11 @@
 
 #import "CordovaPluginSharescreen.h"
 #import <ReplayKit/ReplayKit.h>
+#import <WebRTC/WebRTC.h>
 
 #define IS_SEND_TO_PLUGIN YES
 
 @implementation CordovaPluginSharescreen {
-    WebRTCClient *webRTCClient;
     SignalingClient *signalClient;
     NSString *shareCallback;
     NSString *signalCallback;
@@ -35,9 +35,7 @@
 
 - (void)stopScreenShare:(CDVInvokedUrlCommand *)command {
     self->stopCallback = command.callbackId;
-    if(IS_SEND_TO_PLUGIN) {
-        [self opneScreenSharePickerView];
-    }
+    [self opneScreenSharePickerView];
 }
 
 - (void)sendSignal:(CDVInvokedUrlCommand *)command {
@@ -62,12 +60,7 @@
     if (@available(iOS 12.0, *)) {
         self->shareCallback = command.callbackId;
         self->signalClient = [[SignalingClient alloc] initWithIsLocal:NO];
-        
-        if(!IS_SEND_TO_PLUGIN) {
-            self->webRTCClient = [[WebRTCClient alloc] init];
-            [self->webRTCClient setDelegate:self];
-        }
-        
+     
         [self->signalClient setDelegate:self];
         [self->signalClient enable];
         
@@ -80,7 +73,7 @@
 
 -(void) opneScreenSharePickerView {
     RPSystemBroadcastPickerView *pickerView = [[RPSystemBroadcastPickerView alloc] initWithFrame:CGRectZero];
-    [pickerView setPreferredExtension:@"<SHARE_GROUP_NAME>"];
+    [pickerView setPreferredExtension:@"com.qbix.widgetapp.shareextension"];
     for(UIView *view in [pickerView subviews]) {
         if([view isKindOfClass:[UIButton class]]) {
             [((UIButton*)view) sendActionsForControlEvents:UIControlEventTouchUpInside];
@@ -95,29 +88,6 @@
         [result setKeepCallback:[NSNumber numberWithBool:YES]];
         [self.commandDelegate sendPluginResult:result callbackId:self->shareCallback];
     }
-  }
-
-- (void)webRTCClient:(WebRTCClient *)client didDiscoverLocalCandidate:(RTCIceCandidate *)candidate {
-    if(IS_SEND_TO_PLUGIN) {
-        return;
-    }
-    [self->signalClient sendWithCandidate:candidate];
-//    [self sendDataToJS:[self convertRTCIceCandidate:candidate]];
-}
-
--(void)webRTCClient:(WebRTCClient *)client didChangeConnectionState:(RTCIceConnectionState)state {
-    NSLog(@"didChangeConnectionState: %d", state);
-    if(state == RTCIceConnectionStateConnected) {
-        //show video screen
-        dispatch_async(dispatch_get_main_queue(), ^{
-            VideoViewController *vc = [[VideoViewController alloc] initWithWebRTCClient:self->webRTCClient];
-            [self.viewController presentViewController:vc animated:NO completion:nil];
-        });
-    }
-}
-
--(void)webRTCClient:(WebRTCClient *)client didReceiveData:(NSData *)data {
-    NSLog(@"didReceiveData: %@", data);
 }
 
 - (void)signalOnBoradcastFinished:(SignalingClient *)signalClient {
@@ -132,11 +102,8 @@
 }
 
 - (void)signalClient:(SignalingClient *)signalClient didReceiveCandidate:(RTCIceCandidate *)candidate {
-    if(IS_SEND_TO_PLUGIN) {
-        [self sendDataToJS:[self convertRTCIceCandidate:candidate]];
-    } else {
-        [self->webRTCClient setWithRemoteCandidate:candidate];
-    }
+    [self sendDataToJS:[self convertRTCIceCandidate:candidate]];
+
 }
 
 - (NSString*) convertRTCIceCandidate:(RTCIceCandidate *) candidate {
@@ -178,18 +145,8 @@
     if(sdp.type != RTCSdpTypeOffer) {
         return;
     }
-    if(IS_SEND_TO_PLUGIN) {
-        [self sendDataToJS:[self convertRTCSessionDescription:sdp]];
-    } else {
-    CordovaPluginSharescreen *scopeSelf = self;
-    [scopeSelf->webRTCClient setWithRemoteSdp:sdp completion:^(NSError * _Nullable error) {
-        NSLog(@"hasRemoteSdp = true");
-        [scopeSelf->webRTCClient answerWithCompletion:^(RTCSessionDescription * _Nonnull localSdp) {
-            [scopeSelf->signalClient sendWithSdp:localSdp];
-
-        }];
-    }];
-    }
+    
+    [self sendDataToJS:[self convertRTCSessionDescription:sdp]];
 }
 
 @end

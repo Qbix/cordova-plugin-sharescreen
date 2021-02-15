@@ -17,7 +17,7 @@
 #import <Cordova/CDVPlugin.h>
 #import <app_name_swift_header>
 
-@interface CordovaPluginSharescreen : CDVPlugin<SignalClientDelegate, WebRTCClientDelegate>
+@interface CordovaPluginSharescreen : CDVPlugin<SignalClientDelegate>
 
 - (void)startScreenShare:(CDVInvokedUrlCommand *)command;
 - (void)stopScreenShare:(CDVInvokedUrlCommand *)command;

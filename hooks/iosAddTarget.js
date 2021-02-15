@@ -41,6 +41,7 @@ console.log(CONSTANTS);
 var fs = require('fs');
 var path = require('path');
 var DOMParser = require('xmldom').DOMParser;
+const child_process = require('child_process')
 
 function redError(message) {
     return new Error('"' + PLUGIN_ID + '" \x1b[1m\x1b[31m' + message + '\x1b[0m');
@@ -292,6 +293,22 @@ module.exports = function(context) {
         // console.log('    Writing the modified project back to disk...');
         fs.writeFileSync(pbxProjectPath, pbxProject.writeSync());
         console.log('Added '+CONSTANTS.CUSTOM_TARGET_SUBFOLDER+' to XCode project');
+
+        //Write dependency for pod file
+        var podFilePath = path.join(projectFolder, '../Podfile');
+        var content = fs.readFileSync(podFilePath, "utf8");
+
+        content = content+"\n\n"+"target '"+CONSTANTS.CUSTOM_TARGET_NAME+"' do\n \
+          project '"+projectName+".xcodeproj'\n \
+          pod 'GoogleWebRTC', '~> 1.1'\n \
+        end\n"
+
+        fs.writeFileSync(podFilePath, content);
+
+        child_process.exec('pod install', {cwd: path.join(projectFolder,"..")}, function(err, stdout, stderr) {
+            console.log("Finished");
+        });
+        console.log("After pod install");
 
         deferral.resolve();
     });

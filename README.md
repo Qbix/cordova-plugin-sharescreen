@@ -10,13 +10,16 @@ Install cordova-plugin-browsertabs plugin:
 # Platforms
 
 * iOS (since iOS 11)
-Define Modules on project(not target) true;
-Always Embed Swift Standart Library(on target) true
-Require Only App-Extension-Safe API(screenshare target) no
-NSMicrophoneUsageDescription
-
-
 * Android (since API 21) 
 
 ## Usage
+
+Start screenshare 
+
+	cordova.plugins.sharescreen.startScreenShare(function(mediaStream){}, function(error){});
+
+Stop screenshare:
+
+	cordova.plugins.sharescreen.stopScreenShare(function(){}, function(error){});
+
 

@@ -9,7 +9,10 @@
         Qbix cordova plugin for share screen.
     </description>
 
-    <dependency id="cordova-plugin-iosrtc" url="https://github.com/cordova-rtc/cordova-plugin-iosrtc.git"/>
+    <dependency id="cordova-plugin-add-swift-support" url="https://github.com/Qbix/cordova-plugin-add-swift-support.git"/>
+    
+
+    <!-- <dependency id="cordova-plugin-iosrtc" url="https://github.com/cordova-rtc/cordova-plugin-iosrtc.git"/> -->
     
     <js-module name="CordovaPluginSharescreen" src="www/sharescreen.js">
         <clobbers target="cordova.plugins.sharescreen" />
@@ -57,10 +60,6 @@
         <source-file src="src/ios/ShareExtension/Message.swift"/>
         <source-file src="src/ios/ShareExtension/SessionDescription.swift"/>
         <source-file src="src/ios/ShareExtension/SignalingClient.swift"/>
-        <source-file src="src/ios/ShareExtension/WebRTCClient.swift"/>
-
-        <resource-file src="src/ios/VideoViewController.xib" />
-        <source-file src="src/ios/VideoViewController.swift"/>
 
         <header-file src="src/ios/CordovaPluginSharescreen.h" />
         <source-file src="src/ios/CordovaPluginSharescreen.m" />
@@ -70,7 +69,6 @@
         <hook type="after_plugin_install" src="hooks/iosAddTarget.js" />
         <hook type="after_plugin_install" src="hooks/fixAppEntitlements.js"/>
         <hook type="after_plugin_install" src="hooks/setConstants.js"/>
-        <hook type="after_plugin_install" src="../cordova-plugin-iosrtc/extra/hooks/iosrtc-swift-support.js"/>
         <hook type="before_plugin_uninstall" src="hooks/iosRemoveTarget.js" />
 
         <framework src="GoogleWebRTC" type="podspec" spec="~> 1.1"/>
