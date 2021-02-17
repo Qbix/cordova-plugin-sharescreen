@@ -134,12 +134,12 @@ exports.startScreenShare = function(onStream, error) {
       if("ontrack" in remotePeerConnection) {
           remotePeerConnection.addEventListener('track', function (event) {
               console.log("track", event)
-              onStream(event.streams[0]);
+              onStream(event);
           });
       } else {
           remotePeerConnection.addEventListener('addstream', function (event) {
               console.log("addstream", event)
-              onStream(event.stream);
+              onStream(event);
           });
       }
 
