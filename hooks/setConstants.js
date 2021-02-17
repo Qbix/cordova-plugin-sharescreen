@@ -18,8 +18,8 @@ module.exports = function(context) {
 
 	replaceContent(path.join(iosPlatformPath, "ShareExtension","SignalingClient.swift"), "<SHARE_GROUP_NAME>",'"'+CONSTANTS.APP_GROUP_PREFIX+'.'+packageName+'"');
     replaceContent(path.join(iosPlatformPath, projectName, "Plugins/cordova-plugin-sharescreen","SignalingClient.swift"), "<SHARE_GROUP_NAME>",'"'+CONSTANTS.APP_GROUP_PREFIX+'.'+packageName+'"');
+    replaceContent(path.join(iosPlatformPath, projectName, "Plugins/cordova-plugin-sharescreen","CordovaPluginSharescreen.m"), "<SHARE_EXT_PACKAGE_NAME>",'@"'+packageName+CONSTANTS.BUNDLE_SUFFIX'"');
     replaceContent(path.join(iosPlatformPath, projectName, "Plugins/cordova-plugin-sharescreen","CordovaPluginSharescreen.h"), "<app_name_swift_header>",'"'+projectName+'-Swift.h'+'"');
-    replaceContent(path.join(iosPlatformPath, projectName, "Plugins/cordova-plugin-sharescreen","CordovaPluginSharescreen.m"), "<SHARE_GROUP_NAME>", packageName+CONSTANTS.BUNDLE_SUFFIX);
 
 
     function replaceContent(sourceFile, findString, replaceString) {

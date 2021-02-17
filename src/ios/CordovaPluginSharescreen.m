@@ -73,7 +73,7 @@
 
 -(void) opneScreenSharePickerView {
     RPSystemBroadcastPickerView *pickerView = [[RPSystemBroadcastPickerView alloc] initWithFrame:CGRectZero];
-    [pickerView setPreferredExtension:@"com.qbix.widgetapp.shareextension"];
+    [pickerView setPreferredExtension:<SHARE_EXT_PACKAGE_NAME>];
     for(UIView *view in [pickerView subviews]) {
         if([view isKindOfClass:[UIButton class]]) {
             [((UIButton*)view) sendActionsForControlEvents:UIControlEventTouchUpInside];
