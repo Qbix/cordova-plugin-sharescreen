@@ -71,7 +71,7 @@
         <hook type="after_plugin_install" src="hooks/setConstants.js"/>
         <hook type="before_plugin_uninstall" src="hooks/iosRemoveTarget.js" />
 
-        <framework src="GoogleWebRTC" type="podspec" spec="~> 1.1"/>
+        <!-- <framework src="GoogleWebRTC" type="podspec" spec="~> 1.1"/> -->
     
     </platform>
 </plugin>

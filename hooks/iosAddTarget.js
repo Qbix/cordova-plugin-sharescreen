@@ -299,18 +299,22 @@ module.exports = function(context) {
         var content = fs.readFileSync(podFilePath, "utf8");
 
         content = content+"\n\n"+"target '"+CONSTANTS.CUSTOM_TARGET_NAME+"' do\n \
+          use_frameworks!\n \
           project '"+projectName+".xcodeproj'\n \
           pod 'GoogleWebRTC', '~> 1.1'\n \
         end\n"
 
         fs.writeFileSync(podFilePath, content);
 
+        console.log("Sharescreen pod file :\n"+content);
+
         child_process.exec('pod install', {cwd: path.join(projectFolder,"..")}, function(err, stdout, stderr) {
             console.log("Finished");
+            deferral.resolve();
         });
         console.log("After pod install");
 
-        deferral.resolve();
+        
     });
 
     return deferral.promise;
