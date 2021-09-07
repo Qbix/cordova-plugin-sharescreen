@@ -45,7 +45,7 @@
             </feature>
         </config-file>
 
-        <config-file parent="com.apple.security.application-groups" target="*-Debug.plist">
+        <!-- <config-file parent="com.apple.security.application-groups" target="*-Debug.plist">
           <array>
             <string>group.__APP_IDENTIFIER__</string>
           </array>
@@ -54,7 +54,7 @@
           <array>
             <string>group.__APP_IDENTIFIER__</string>
           </array>
-        </config-file>
+        </config-file> -->
 
         <source-file src="src/ios/ShareExtension/IceCandidate.swift"/>
         <source-file src="src/ios/ShareExtension/Message.swift"/>
